@@ -26,9 +26,8 @@ namespace this_coro = boost::asio::this_coro;
 awaitable<void> echo(tcp::socket socket) {
     try {
         char data[1024];
-        while (1) {
-            std::size_t n = co_await
-            socket.async_read_some(boost::asio::buffer(data), use_awaitable);
+        while (true) {
+            std::size_t n = co_await socket.async_read_some(boost::asio::buffer(data), use_awaitable);
             co_await async_write(socket, boost::asio::buffer(data, n), use_awaitable);
         }
     }
@@ -38,17 +37,17 @@ awaitable<void> echo(tcp::socket socket) {
 }
 
 awaitable<void> listener() {
-    auto executor = co_await
-    this_coro::executor;
+    auto executor = co_await this_coro::executor;
     tcp::acceptor acceptor(executor, {tcp::v4(), 55555});
-    while (1) {
-        tcp::socket socket = co_await
-        acceptor.async_accept(use_awaitable);
-        co_spawn(executor,
-                 [socket = std::move(socket)]() mutable {
-                     return echo(std::move(socket));
-                 },
-                 detached);
+    while (true) {
+        tcp::socket socket = co_await acceptor.async_accept(use_awaitable);
+        co_spawn(
+                executor,
+                [socket = std::move(socket)]() mutable {
+                    return echo(std::move(socket));
+                },
+                detached
+        );
     }
 }
 
