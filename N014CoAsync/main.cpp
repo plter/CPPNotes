@@ -19,7 +19,7 @@ int main() {
     boost::asio::io_context io_context;
 
     boost::asio::co_spawn(io_context, asyncMain, [](auto err) {
-        std::cout << "OK 1" << std::endl;
+        std::cout << "Completed." << std::endl;
     });
     io_context.run();
     return 0;
