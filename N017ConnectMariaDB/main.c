@@ -20,6 +20,8 @@ int main(int argc, char *argv[]) {
     if (!mysql_real_connect(mysql, "127.0.0.1", "root", "example", "mydb", 0, "/tmp/mysql.sock", 0))
         show_error(mysql);
 
+    mysql_set_character_set(mysql, "utf8mb4");
+
     /* Affected rows after select */
     query = "SELECT * FROM user order by id DESC";
     if (mysql_real_query(mysql, query, strlen(query)))
